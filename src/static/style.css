@@ -1,0 +1,195 @@
+:root {
+	--background: #fff;
+	--component: #eee;
+	--foreground: #222;
+	--subground: #444;
+	--highlight: #35374f;
+	--error: #dd2222;
+	--on-error: #fff;
+	--snackbar: #333;
+	--on-snackbar: #fff;
+	--shadow: #000;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background: #222;
+		--component: #333;
+		--foreground: #fff;
+		--subground: #ddd;
+		--highlight: #d1d3eb;
+	}
+}
+
+@keyframes snackbar {
+	0%, 100% { transform: translateY(calc(100% + 32px)); }
+	10%, 90% { transform: translateY(0); }
+}
+
+::selection {
+	background-color: var(--highlight);
+	color: var(--background);
+}
+
+html {
+	height: 100%;
+	width: 100%;
+	margin: 0px;
+	background-color: var(--background);
+	color: var(--foreground);
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+	--hz-margin: max(calc(50% - 400px), 0px);
+	--vt-margin: min(10%, 100px);
+
+	width: 100%;
+	max-width: 800px;
+	margin: var(--vt-margin) var(--hz-margin);
+}
+
+body > *, form > * {
+	width: calc(100% - 40px);
+	margin: 10px 20px;
+}
+
+body > form {
+	width: 100%;
+	margin: 0px;
+}
+
+a {
+	color: var(--foreground);
+}
+
+a:active {
+	color: var(--highlight);
+}
+
+aside.snackbar {
+	background-color: var(--snackbar);
+	color: var(--on-snackbar);
+	position: fixed;
+	bottom: 16px;
+	left: 16px;
+	padding: 16px;
+	width: calc(100% - 64px);
+	max-width: 300px;
+	border-radius: 4px;
+	box-shadow: 0px 0px 8px 0px var(--shadow);
+	animation: snackbar 4s ease-in-out;
+	transform: translateY(calc(100% + 32px));
+}
+
+details {
+	padding-left: 16px;
+}
+
+details > summary {
+	margin-left: -16px;
+	outline: none !important;
+	cursor: pointer;
+}
+
+details > summary > * {
+	display: inline-block;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	cursor: pointer;
+}
+
+button.destructive {
+	background-color: var(--error);
+	color: var(--on-error);
+}
+
+button.plain {
+	padding: 0px;
+	width: 20px;
+	height: 20px;
+	border-radius: 10px;
+	text-align: center;
+	margin-left: 5px;
+}
+
+input, button, select {
+	width: calc(100% - 20px);
+	padding: 10px;
+	border-radius: 10px;
+	background-color: var(--component);
+	color: var(--foreground);
+	outline: none;
+	border: none;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+form > input, form > select {
+	width: calc(100% - 60px);
+}
+
+input:focus {
+	width: calc(100% - 22px);
+	padding: 9px 10px;
+	border: 1px solid;
+	border-color: var(--highlight);
+	color: var(--highlight);
+}
+
+input:active, button:active,
+input:focus, button:focus {
+	box-shadow: 0px 0px 10px 0px var(--component);
+}
+
+input::placeholder {
+	color: var(--subground);
+}
+
+input[type=checkbox],
+input[type=radio] {
+	width: initial;
+	height: initial;
+	cursor: pointer;
+}
+
+input[type=checkbox] + label,
+input[type=radio] + label {
+	width: fit-content;
+	cursor: pointer;
+}
+
+input[type=submit],
+input[type=button],
+button {
+	width: fit-content;
+	padding: 10px 25px;
+	border-radius: 10px;
+	background-color: var(--component);
+	color: var(--foreground);
+	cursor: pointer;
+}
+
+input[type=submit]:hover,
+input[type=button]:hover,
+button:hover {
+	filter: contrast(0.5);
+}
+
+select {
+	width: 100%;
+	cursor: pointer;
+}
+
+select:active, select:focus {
+	border: 1px solid;
+	padding: 9px;
+}
+
+select > option {
+	cursor: pointer;
+}
+
+.hidden {
+	display: none;
+}
