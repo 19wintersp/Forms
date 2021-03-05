@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Editing <%= meta.title %> (<%= code %>) | <%= TITLE %></title>
+		<link rel="icon" href="/static/favicon.png">
+		<link rel="stylesheet" href="/static/style.css">
+
+		<% if (newForm) { %>
+			<script src="/static/editor-new.js" defer></script>
+		<% } else { %>
+			<script src="/static/ext/vue.min.js" defer></script>
+			<script src="/static/editor.js" defer></script>
+		<% } %>
+
+		<meta name="data-formdata" content="<%= JSON.stringify({
+			TITLE,
+			meta,
+			code,
+			newForm,
+			sections,
+			responses
+		}) %>">
+
+		<style>
+			.right {
+				float: right;
+				margin-top: 0px;
+			}
+
+			details > summary, .row {
+				margin-bottom: 8px;
+			}
+
+			details > summary > *:not(:first-child), .row > *:not(:first-child) {
+				float: right;
+			}
+
+			.flex-space {
+				display: flex;
+				justify-content: space-between;
+			}
+		</style>
+	</head>
+	<body>
+		<noscript>
+			<h1>You need to enable JavaScript to edit a form.</h1>
+		</noscript>
+
+		<% if (newForm) { %>
+			<h1>Hi there! 👋</h1>
+			<p>
+				You've just created a form! Before you continue, you need to have two links.
+				The first is your link to share with other people: <a href="<%= `/view/${ code }` %>" id="publink">[loading]</a>.
+				The second is the link for you to edit this: <a href="<%= `/edit/${ code }?key=${ key }` %>" id="seclink">[loading]</a>.
+				Write both of them down or bookmark them, and make sure to keep the second one private.
+			</p>
+
+			<form method="GET" href="<%= code %>">
+				<input type="hidden" name="key" value="<%= key %>">
+				<button>Start editing</button>
+			</form>
+
+			<!-- <p><a href="<%= `${ code }?key=${ key }` %>">I'm ready; continue</a></p> -->
+		<% } else { %>
+			<!-- Vue - vuejs.org -->
+
+			<section>
+				<button class="right" id="update-save">Save</button>
+				<h1>Editing <%= meta.title %></h1>
+				<p>
+					<a href="#section-settings">Settings</a>
+					|
+					<a href="#section-sections">Questions</a>
+					|
+					<a href="#section-responses">Responses</a>
+					|
+					<a href="/view/<%= code %>" target="_blank">Preview</a>
+				</p>
+			</section>
+
+			<hr>
+
+			<section id="section-settings">
+				<h2>Settings</h2>
+
+				<label for="settings-formtitle">Form title</label>
+				<input id="settings-formtitle" value="<%= meta.title %>">
+
+				<label for="settings-formauthor">Organiser</label>
+				<input id="settings-formauthor" value="<%= meta.author %>">
+
+				<button class="destructive" id="update-delete">Delete form</button>
+			</section>
+
+			<hr>
+
+			<section id="section-sections">
+				<button class="right" id="sections-add" v-on:click="addS()">New section</button>
+				<h2>Questions</h2>
+
+				<p v-if="!ready"><i>Loading...</i></p>
+
+				<details v-for="(section, sNum) in sections">
+					<summary>
+						<h3>{{ section.title }}</h3>
+						
+						<button class="plain destructive" title="Remove" v-on:click="delS(sNum)">🛇</button>
+						<button class="plain" title="Move up" v-on:click="mvS(sNum, -1)">▲</button>
+						<button class="plain" title="Move down" v-on:click="mvS(sNum, 1)">▼</button>
+						<button class="plain" title="New question" v-on:click="addQ(sNum)">+</button>
+					</summary>
+
+					<label>Section title</label>
+					<input class="section-title" v-model="section.title">
+
+					<details v-for="(question, qNum) in section.items">
+						<summary>
+							<h4>{{ question.title }}</h4>
+							
+							<button class="plain destructive" title="Remove" v-on:click="delQ(sNum, qNum)">🛇</button>
+							<button class="plain" title="Move up" v-on:click="mvQ(sNum, qNum, -1)">▲</button>
+							<button class="plain" title="Move down" v-on:click="mvQ(sNum, qNum, 1)">▼</button>
+						</summary>
+
+						<label>Question</label>
+						<input class="question-title" v-model="question.title">
+
+						<input class="question-reqin" v-model="question.required" type="checkbox" v-bind:id="question.id + '-reqck'">
+						<label v-bind:for="question.id + '-reqck'">Required</label><br>
+
+						<label>Type</label>
+						<select class="question-type" v-model="question.type">
+							<option value="text" v-bind:selected="question.type == 'text'">
+								Text input
+							</option>
+							<option value="number" v-bind:selected="question.type == 'number'">
+								Number input
+							</option>
+							<option value="radio" v-bind:selected="question.type == 'radio'">
+								Radiobuttons
+							</option>
+							<option value="checkbox" v-bind:selected="question.type == 'checkbox'">
+								Checkboxes
+							</option>
+						</select>
+
+						<div v-if="['radio', 'checkbox'].includes(question.type)">
+							<label class="flex-space">
+								<div>Options</div>
+
+								<button class="plain" v-on:click="addO(sNum, qNum)" title="New option">+</button>
+							</label>
+
+							<details v-for="(option, oNum) in question.options">
+								<summary>
+									<h5>{{ option }}</h5>
+
+									<button class="plain destructive" title="Remove" v-on:click="delO(sNum, qNum, oNum)">🛇</button>
+									<button class="plain" title="Move up" v-on:click="mvO(sNum, qNum, oNum, -1)">▲</button>
+									<button class="plain" title="Move down" v-on:click="mvO(sNum, qNum, oNum, 1)">▼</button>
+								</summary>
+
+								<label>Option</label>
+								<input v-model="question.options[oNum]">
+							</details>
+						</div>
+					</details>
+				</details>
+			</section>
+
+			<hr>
+
+			<section id="section-responses">
+				<%
+					const questions = Object.fromEntries(
+						sections
+							.map(section => section.items)
+							.flat()
+							.map(question => [ question.id, question.title ])
+					);
+				%>
+
+				<h2>Responses (<%= responses.length %>)</h2>
+
+				<% for (const rNum in responses) { %>
+					<details>
+						<summary>Response #<%= (parseInt(rNum, 10) + 1) %></summary>
+
+						<% for (const qId in responses[rNum]) { %>
+							<p>
+								<b><%= questions[qId] %></b>
+								<br>
+								<i><%= responses[rNum][qId] %></i>
+							</p>
+						<% } %>
+					</details>
+				<% } %>
+			</section>
+		<% } %>
+	</body>
+</html>

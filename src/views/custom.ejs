@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= data.title %> | <%= TITLE %></title>
+		<link rel="icon" href="/static/favicon.png">
+		<link rel="stylesheet" href="/static/style.css">
+	</head>
+	<body>
+		<h1><%= data.title %></h1>
+
+		<% for (paragraph of data.content) { %>
+			<p><%= paragraph %></p>
+		<% } %>
+	</body>
+</html>

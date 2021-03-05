@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= TITLE %></title>
+		<link rel="icon" href="/static/favicon.png">
+		<link rel="stylesheet" href="/static/style.css">
+	</head>
+	<body>
+		<h1><%= TITLE %></h1>
+
+		<p><a href="/pages">Other pages</a></p>
+
+		<hr>
+
+		<form action="/view" method="GET">
+			<h2>Open a form</h2>
+
+			<label for="f0i1">Code</label>
+			<input type="text" placeholder="AAAAAAAA" id="f0i1" name="id" pattern="[a-zA-Z0-9_-]{8}" required>
+
+			<input type="submit" value="Open">
+		</form>
+
+		<hr>
+
+		<form action="/" method="POST">
+			<h2>Create a form</h2>
+
+			<label for="f1i1">Title</label>
+			<input type="text" placeholder="Title" id="f1i1" name="title" required>
+
+			<label for="f1i2">Organiser</label>
+			<input type="text" placeholder="Author" id="f1i2" name="author" required>
+
+			<input type="submit" value="Create">
+		</form>
+
+		<hr>
+
+		<form action="/edit"  method="GET">
+			<h2>Edit a form</h2>
+
+			<label for="f2i1">Code</label>
+			<input type="text" placeholder="AAAAAAAA" id="f2i1" name="code" pattern="[a-zA-Z0-9_-]{8}" required>
+
+			<label for="f2i2">Key</label>
+			<input type="text" placeholder="AAAAAAAAAAAA" id="f2i2" name="key" pattern="[a-zA-Z0-9_-]{12}" required>
+
+			<input type="submit" value="Open">
+		</form>
+	</body>
+</html>

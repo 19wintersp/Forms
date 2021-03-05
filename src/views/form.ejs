@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title><%= meta.title %> (<%= code %>) | <%= TITLE %></title>
+		<link rel="icon" href="/static/favicon.png">
+		<link rel="stylesheet" href="/static/style.css">
+	</head>
+	<body>
+		<h1><%= meta.title %></h1>
+		<p><%= meta.author %></p>
+
+		<form method="POST" action="./<%= code %>">
+			<% for (const section of sections) { %>
+				<hr><pre><br></pre>
+
+				<% if (section.title) { %>
+					<h2><%= section.title %></h2>
+				<% } %>
+				
+				<% for (const question of section.items) { %>
+					<% if (question.options) { %>
+						<label><%= question.title %></label><br>
+						<% for (const option in question.options) { %>
+							<input
+								<% if (question.required) { %>
+									required
+								<% } %>
+								name="<%= question.id %>"
+								id="input-<%= question.id %>-<%= option %>"
+								type="<%= question.type %>"
+								value="<%= question.options[option] %>"
+							><%_ _%>
+							<label for="input-<%= question.id %>-<%= option %>"><%= question.options[option] %></label>
+							<br>
+						<% } %>
+					<% } else { %>
+						<label for="input-<%= question.id %>"><%= question.title %></label>
+						<input
+							<% if (question.required) { %>
+								required
+							<% } %>
+							name="<%= question.id %>"
+							id="input-<%= question.id %>"
+							type="<%= question.type %>"
+						>
+					<% } %>
+
+					<pre><br></pre>
+				<% } %>
+			<% } %>
+			
+			<button>Submit</button>
+		</form>
+	</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Other pages | <%= TITLE %></title>
+		<link rel="icon" href="/static/favicon.png">
+		<link rel="stylesheet" href="/static/style.css">
+	</head>
+	<body>
+		<h1>Other pages</h1>
+
+		<ul>
+			<% for (page in pages) { %>
+				<li><a href="/pages/<%= page %>"><%= pages[page].title %></a></li>
+			<% } %>
+		</ul>
+	</body>
+</html>
